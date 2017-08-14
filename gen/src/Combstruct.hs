@@ -7,6 +7,8 @@ module Combstruct
   , singPrecision
   , valPrecision
   , State
+  , oracleToList
+  , oracleFromList
   )
 where
 
@@ -20,6 +22,12 @@ import           Oracle
 import           Oracle.Newton
 
 type Oracle = Map String Double
+
+oracleToList :: Oracle -> [(String,Double)]
+oracleToList = Map.toList
+
+oracleFromList :: [(String,Double)] -> Oracle
+oracleFromList = Map.fromList
 
 varToComb :: Var -> CombExp
 varToComb (Var 0 _) = error "Impossible: nil reference"

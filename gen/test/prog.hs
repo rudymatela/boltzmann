@@ -45,6 +45,15 @@ main = do
   "sample $ toGen prog"      ->- sample $ toGen prog
   "sampleFitness 10 fitnessLength (toOracle prog)" ->-
     print =<< sampleFitness 10 fitnessLength (toOracle prog)
+  "oracleToList (toOracle prog)" ->- print $ oracleToList (toOracle prog)
+
+  "sampleFitness 10 fitnessLength (oracleFromList prog)" ->-
+    print =<< sampleFitness 10 fitnessLength (oracleFromList [("Dec",1.27)
+                                                             ,("Exp",0.64)
+                                                             ,("Id",0.78)
+                                                             ,("Prog",0.47)
+                                                             ,("Stat",0.94)
+                                                             ,("Type",0.79)])
 
 -- callTree:
 --   toGen
