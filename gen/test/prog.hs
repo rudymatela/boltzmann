@@ -47,7 +47,7 @@ main = do
     print =<< sampleFitness 10 fitnessLength (toOracle prog)
   "oracleToList (toOracle prog)" ->- print $ oracleToList (toOracle prog)
 
-  "sampleFitness 10 fitnessLength (oracleFromList prog)" ->-
+  "sampleFitness 10 fitnessLength (oracleFromList ...)" ->-
     print =<< sampleFitness 10 fitnessLength (oracleFromList [("Dec",1.27)
                                                              ,("Exp",0.64)
                                                              ,("Id",0.78)
