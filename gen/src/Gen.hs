@@ -1,4 +1,11 @@
-module Gen (toGen) where
+module Gen
+  ( toGen
+  , toOracle
+  , toDefs
+  , defsToComb
+  , combToVals
+  )
+where
 
 import           Combstruct
 import           Control.Monad

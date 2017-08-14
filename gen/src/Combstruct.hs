@@ -1,4 +1,14 @@
-module Combstruct (Oracle, defsToOracle) where
+module Combstruct
+  ( Oracle
+  , defsToOracle
+  , defsToComb
+  , combToVals
+  , singularity
+  , singPrecision
+  , valPrecision
+  , State
+  )
+where
 
 import           Data.Array.IArray
 import           Data.Generics     (dataTypeName)
