@@ -52,3 +52,5 @@ To sample fitness values for a customized Oracle, just:
                                                      ,("Stat",0.94)
                                                      ,("Type",0.79)])
     [178.0,41.0,34.0,1042.0,15.0,109.0,1093.0,26.0,115.0,44.0,103.0]
+
+Please see [`prog.hs`](gen/test/prog.hs) for a full runnable example.
