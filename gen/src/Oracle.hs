@@ -14,8 +14,8 @@ data CombExp
   = Zero
   | One
   | X
-  | (:+:) CombExp CombExp
-  | (:*:) CombExp CombExp
+  | CombExp :+: CombExp
+  | CombExp :*: CombExp
   | Y Int
   deriving Show
 
