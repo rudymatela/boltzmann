@@ -44,6 +44,8 @@ jacobian sys = array ((li, li), (ui, ui)) list
                    (li, ui) = bounds sys
 
 newtype State = NewtonState (Array Int Double, Array (Int, Int) Double)
+  deriving Show
+
 instance CombSysState State where
   zeroState sys = NewtonState ((listArray (bounds sys) (repeat 0.0)), identity (bounds sys))
   stateToList (NewtonState (y,_)) = elems y
