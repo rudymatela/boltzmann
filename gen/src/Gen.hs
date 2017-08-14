@@ -4,6 +4,7 @@ module Gen
   , toDefs
   , defsToComb
   , combToVals
+  , sampleN
   )
 where
 
@@ -77,3 +78,8 @@ toGenAux o x = do gmapM (toGenAux o) . floatToInstance =<< choose (0, sum po)
 toGen :: Data a => a -> Gen a
 -- toGen x | trace (show $ toOracle x) False = undefined
 toGen x = toGenAux (toOracle x) x
+
+-- | This increments size in the same way as 'sample' from QuickCheck.
+--   Maybe this is not appropriate, but for now, will do.
+sampleN :: Int -> Gen a -> IO [a]
+sampleN n g = generate $ sequence [ resize n g | n <- [0..n] ]
