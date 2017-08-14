@@ -1,3 +1,6 @@
+This is just a fork.  Please see the
+[official repository](https://github.com/byorgey/boltzmann).
+
 Boltzmann sampling for random generation of algebraic data types in Haskell.
 
 For background, see:
