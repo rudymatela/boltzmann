@@ -24,6 +24,12 @@ toSingularity = singularity singPrecision valPrecision
               . defsToComb
               . toDefs
 
+-- quite artificial fitness funciton, but works fine for an example
+--
+-- fitnessLength (Prog Noded Noop) == 15.0
+fitnessLength :: Prog -> Double
+fitnessLength = fromIntegral . length . show
+
 (->-) :: String -> IO () -> IO ()
 s ->- a = do
   putStrLn $ "> " ++ s
@@ -37,6 +43,8 @@ main = do
   "singularity ..."          ->- print $ toSingularity prog
   "toOracle prog"            ->- print $ toOracle prog
   "sample $ toGen prog"      ->- sample $ toGen prog
+  "sampleFitness 10 fitnessLength (toOracle prog)" ->-
+    print =<< sampleFitness 10 fitnessLength (toOracle prog)
 
 -- callTree:
 --   toGen

@@ -5,6 +5,7 @@ module Gen
   , defsToComb
   , combToVals
   , sampleN
+  , sampleFitness
   )
 where
 
@@ -83,3 +84,10 @@ toGen x = toGenAux (toOracle x) x
 --   Maybe this is not appropriate, but for now, will do.
 sampleN :: Int -> Gen a -> IO [a]
 sampleN n g = generate $ sequence [ resize n g | n <- [0..n] ]
+
+sampleFitness :: Data a => Int -> (a -> Double) -> Oracle -> IO [Double]
+sampleFitness n f o = map f <$> sampleN n g
+  where
+  g = toGenAux o (argTyOf f)
+  argTyOf :: (a -> b) -> a
+  argTyOf _ = undefined
