@@ -38,7 +38,7 @@ instance Num Nat where
 
 
 
-data Expr = Const Double
+data Expr = Const Nat
           | Var String
           | Expr :+: Expr
           | Expr :-: Expr
@@ -46,7 +46,7 @@ data Expr = Const Double
 --        | Expr :/: Expr
   deriving (Show, Eq, Ord, Data, Typeable)
 
-eval :: Map String Double -> Expr -> Double
+eval :: Map String Nat -> Expr -> Nat
 eval m (Const x) = x
 eval m (Var s)   = fromMaybe (error $ "unbound varialbe " ++ s)
                  $ M.lookup s m
@@ -56,29 +56,27 @@ eval m (e1 :*: e2) = eval m e1 * eval m e2
 -- eval m (e1 :/: e2) | eval m e2 == 0.0 = 1
 --                    | otherwise      = eval m e1 / eval m e2
 
-fitness :: [(Double,Double)] -> Expr -> Double
-fitness xys e = sum fs / fromIntegral (length fs)
+fitness :: [(Nat,Nat)] -> Expr -> Double
+fitness xys e = fromIntegral (natToInt $ sum fs) / fromIntegral (length fs)
   where
   fs = fitness' xys e
-  fitness' :: [(Double,Double)] -> Expr -> [Double]
+  fitness' :: [(Nat,Nat)] -> Expr -> [Nat]
   fitness' []          _ = []
   fitness' ((x,y):xys) e = sq (eval (singleton "x" x) e - y)
                          : fitness' xys e
   sq x = x * x
 
-foo :: Double -> Double
-foo x = x ** 6 - 1
+foo :: Nat -> Nat
+foo x = x ^ 6 - 1
 
-fooMap :: [(Double,Double)]
-fooMap = [ (-2.0, 63.000000)
-         , (-1.5, 10.390625)
-         , (-1.0,  0.000000)
-         , (-0.5, -0.984375)
-         , (-0.0, -1.000000)
-         , ( 0.5, -0.984375)
-         , ( 1.0,  0.000000)
-         , ( 1.5, 10.390625)
-         , ( 2.0, 63.000000) ]
+fooMap :: [(Nat,Nat)]
+fooMap = [ ( 1,     0)
+         , ( 2,    63)
+         , ( 3,   728)
+         , ( 4,  4095)
+         , ( 5, 15624)
+         , ( 6, 46655)
+         ]
 
 main :: IO ()
 main = do
