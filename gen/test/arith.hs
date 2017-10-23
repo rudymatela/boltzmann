@@ -74,15 +74,15 @@ foo x = x ^ 6 - 1
 fooMap :: [(Nat,Nat)]
 fooMap = [ ( 1,     0)
          , ( 2,    63)
-         , ( 3,   728)
-         , ( 4,  4095)
-         , ( 5, 15624)
-         , ( 6, 46655)
+--       , ( 3,   728)
+--       , ( 4,  4095)
+--       , ( 5, 15624)
+--       , ( 6, 46655)
          ]
 
 fun :: [Double] -> IO Double
 fun [x,y] =  minimum
-         <$> sampleFitness 100 (fitness fooMap) (oracleFromList [("Expr",x),("Nat",y)])
+         <$> sampleFitness 5 (fitness fooMap) (oracleFromList [("Expr",x),("Nat",y)])
 
 main :: IO ()
 main = do
@@ -90,7 +90,7 @@ main = do
   print oracle
   let coefficients = map snd $ oracleToList oracle 
   print coefficients
-  bestXs <- C.run $ C.minimizeIO fun coefficients
+  bestXs <- C.run $ (C.minimizeIO fun coefficients){C.tolStagnation = Just 2}
   putStrLn "end"
   --minimize 
 
