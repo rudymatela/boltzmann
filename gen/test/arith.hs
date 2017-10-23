@@ -41,22 +41,21 @@ instance Num Nat where
 
 
 data Expr = Const Nat
-          | Var Nat
+          | Var
           | Expr :+: Expr
           | Expr :-: Expr
           | Expr :*: Expr
 --        | Expr :/: Expr
   deriving (Show, Eq, Ord, Data, Typeable)
 
-eval :: Map Nat Nat -> Expr -> Nat
-eval m (Const x) = x
-eval m (Var s)   = fromMaybe Z -- (error $ "unbound variable " ++ show s)
-                 $ M.lookup s m
-eval m (e1 :+: e2) = eval m e1 + eval m e2
-eval m (e1 :-: e2) = eval m e1 - eval m e2
-eval m (e1 :*: e2) = eval m e1 * eval m e2
--- eval m (e1 :/: e2) | eval m e2 == 0.0 = 1
---                    | otherwise      = eval m e1 / eval m e2
+eval :: Nat -> Expr -> Nat
+eval n (Const x) = x
+eval n Var       = n
+eval n (e1 :+: e2) = eval n e1 + eval n e2
+eval n (e1 :-: e2) = eval n e1 - eval n e2
+eval n (e1 :*: e2) = eval n e1 * eval n e2
+-- eval n (e1 :/: e2) | eval n e2 == 0.0 = 1
+--                    | otherwise      = eval n e1 / eval n e2
 
 fitness :: [(Nat,Nat)] -> Expr -> Double
 fitness xys e = fromIntegral (natToInt $ sum fs) / fromIntegral (length fs)
@@ -64,7 +63,7 @@ fitness xys e = fromIntegral (natToInt $ sum fs) / fromIntegral (length fs)
   fs = fitness' xys e
   fitness' :: [(Nat,Nat)] -> Expr -> [Nat]
   fitness' []          _ = []
-  fitness' ((x,y):xys) e = sq (eval (singleton Z x) e - y)
+  fitness' ((x,y):xys) e = sq (eval x e - y)
                          : fitness' xys e
   sq x = x * x
 
