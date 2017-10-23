@@ -16,3 +16,4 @@ tags
 cabal.sandbox.config
 
 gen/test/prog
+gen/test/arith
