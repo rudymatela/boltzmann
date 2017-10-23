@@ -11,6 +11,8 @@ import Data.Maybe (fromMaybe)
 
 import Combstruct
 
+import qualified Numeric.Optimization.Algorithms.CMAES as C
+
 data Nat = Z | S Nat
   deriving (Eq, Ord, Data, Typeable)
 
@@ -39,16 +41,16 @@ instance Num Nat where
 
 
 data Expr = Const Nat
-          | Var String
+          | Var Nat
           | Expr :+: Expr
           | Expr :-: Expr
           | Expr :*: Expr
 --        | Expr :/: Expr
   deriving (Show, Eq, Ord, Data, Typeable)
 
-eval :: Map String Nat -> Expr -> Nat
+eval :: Map Nat Nat -> Expr -> Nat
 eval m (Const x) = x
-eval m (Var s)   = fromMaybe (error $ "unbound varialbe " ++ s)
+eval m (Var s)   = fromMaybe Z -- (error $ "unbound variable " ++ show s)
                  $ M.lookup s m
 eval m (e1 :+: e2) = eval m e1 + eval m e2
 eval m (e1 :-: e2) = eval m e1 - eval m e2
@@ -62,7 +64,7 @@ fitness xys e = fromIntegral (natToInt $ sum fs) / fromIntegral (length fs)
   fs = fitness' xys e
   fitness' :: [(Nat,Nat)] -> Expr -> [Nat]
   fitness' []          _ = []
-  fitness' ((x,y):xys) e = sq (eval (singleton "x" x) e - y)
+  fitness' ((x,y):xys) e = sq (eval (singleton Z x) e - y)
                          : fitness' xys e
   sq x = x * x
 
@@ -78,9 +80,19 @@ fooMap = [ ( 1,     0)
          , ( 6, 46655)
          ]
 
+fun :: [Double] -> IO Double
+fun [x,y] =  minimum
+         <$> sampleFitness 100 (fitness fooMap) (oracleFromList [("Expr",x),("Nat",y)])
+
 main :: IO ()
 main = do
-  print $ toOracle (undefined :: Expr)
+  let oracle = toOracle (undefined :: Expr)
+  print oracle
+  let coefficients = map snd $ oracleToList oracle 
+  print coefficients
+  bestXs <- C.run $ C.minimizeIO fun coefficients
+  putStrLn "end"
+  --minimize 
 
 -- > eval M.empty $ Const 2.0 :*: Const 3.0
 -- 6.0
