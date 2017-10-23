@@ -83,15 +83,19 @@ fun :: [Double] -> IO Double
 fun [x,y] =  minimum
          <$> sampleFitness 5 (fitness fooMap) (oracleFromList [("Expr",x),("Nat",y)])
 
+expr :: Expr
+expr = undefined
+
 main :: IO ()
 main = do
   let oracle = toOracle (undefined :: Expr)
   print oracle
   let coefficients = map snd $ oracleToList oracle 
   print coefficients
+  print =<< sampleN 1 (toGen expr)
+  print =<< sampleFitness 100 (fitness fooMap) oracle
   bestXs <- C.run $ (C.minimizeIO fun coefficients){C.tolStagnation = Just 2}
   putStrLn "end"
-  --minimize 
 
 -- > eval M.empty $ Const 2.0 :*: Const 3.0
 -- 6.0
@@ -107,3 +111,8 @@ main = do
 -- 906.3186848958334
 -- > fitness fooMap (Var "x" :*: Var "x" :*: Var "x" :*: Var "x" :*: Var "x" :*: Var "x" :-: Const 1)
 -- 0.0
+
+
+-- * how to represent doubles?
+-- * how to avoid really large values?
+--     - discard large values?
