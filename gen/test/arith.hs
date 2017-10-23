@@ -11,13 +11,40 @@ import Data.Maybe (fromMaybe)
 
 import Combstruct
 
+data Nat = Z | S Nat
+  deriving (Eq, Ord, Data, Typeable)
+
+instance Show Nat where
+  show = show . natToInt
+
+natToInt :: Nat -> Int
+natToInt Z = 0
+natToInt (S n) = natToInt n + 1
+
+instance Num Nat where
+  n + Z     = n
+  n + (S m) = S (n + m)
+  n * Z     = Z
+  n * (S m) = n + (n * m)
+  n     - Z     = n
+  Z     - (S m) = Z
+  (S n) - (S m) = n - m
+  abs n = n
+  signum Z = Z
+  signum (S _) = S Z
+  fromInteger 0 = Z
+  fromInteger n | n > 0 = S (fromInteger (n - 1))
+                | otherwise = error "negative!"
+
+
+
 data Expr = Const Double
           | Var String
           | Expr :+: Expr
           | Expr :-: Expr
           | Expr :*: Expr
-          | Expr :/: Expr
-  deriving (Show, Eq, Ord)
+--        | Expr :/: Expr
+  deriving (Show, Eq, Ord, Data, Typeable)
 
 eval :: Map String Double -> Expr -> Double
 eval m (Const x) = x
@@ -26,8 +53,8 @@ eval m (Var s)   = fromMaybe (error $ "unbound varialbe " ++ s)
 eval m (e1 :+: e2) = eval m e1 + eval m e2
 eval m (e1 :-: e2) = eval m e1 - eval m e2
 eval m (e1 :*: e2) = eval m e1 * eval m e2
-eval m (e1 :/: e2) | eval m e2 == 0.0 = 1
-                   | otherwise      = eval m e1 / eval m e2
+-- eval m (e1 :/: e2) | eval m e2 == 0.0 = 1
+--                    | otherwise      = eval m e1 / eval m e2
 
 fitness :: [(Double,Double)] -> Expr -> Double
 fitness xys e = sum fs / fromIntegral (length fs)
@@ -54,7 +81,8 @@ fooMap = [ (-2.0, 63.000000)
          , ( 2.0, 63.000000) ]
 
 main :: IO ()
-main = putStrLn "Hello world"
+main = do
+  print $ toOracle (undefined :: Expr)
 
 -- > eval M.empty $ Const 2.0 :*: Const 3.0
 -- 6.0
