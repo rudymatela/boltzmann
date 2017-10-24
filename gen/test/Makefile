@@ -1,3 +1,5 @@
+GHCFLAGS=# -dynamic # on Arch Linux
+
 all: prog
 
 %: %.hs
