@@ -5,6 +5,7 @@ cabal-dev
 *.chi
 *.chs.h
 *.swp
+*.dat
 .virthualenv
 *~
 dist_*
