@@ -1,4 +1,4 @@
-GHCFLAGS=# -dynamic # on Arch Linux
+GHCFLAGS= -dynamic # on Arch Linux
 
 all: prog
 
