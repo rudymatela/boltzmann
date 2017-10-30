@@ -41,3 +41,9 @@ infixr 0 ->-
 -- 
 -- > toOracle (undefined :: List ())
 -- fromList [("()",0.9999999999417923),("List",8.589933255397791e9)]
+--
+-- > toOracle (undefined :: [Nat])
+-- ... non-termination ...
+--
+-- > toOracle (undefined :: List Nat)
+-- ... non-termination ...
