@@ -7,7 +7,10 @@ import Data.Typeable
 data Nat = Z | S Nat
   deriving (Eq, Ord, Data, Typeable, Show)
 
-data List a = Nil | Cons a (List a)
+data UnitType = UnitCons
+  deriving (Eq, Ord, Data, Typeable, Show)
+
+data ListType a = Nil | Cons a (ListType a)
   deriving (Eq, Ord, Data, Typeable, Show)
 
 main :: IO ()
@@ -15,7 +18,7 @@ main = do
   "()"       ->- print $ toOracle (undefined :: ())
   "Nat"      ->- print $ toOracle (undefined :: Nat)
   "[()]"     ->- print $ toOracle (undefined :: [()])
-  "List ()"  ->- print $ toOracle (undefined :: List ())
+  "List ()"  ->- print $ toOracle (undefined :: ListType UnitType)
 
 -- Infinite loop?
 --"[Nat]"    ->- print $ toOracle (undefined :: [Nat])
